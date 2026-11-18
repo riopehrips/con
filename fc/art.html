@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading Content...</title>
+    <script>
+        // URL theke id ba filename-ti get korchi
+        const urlParams = new URLSearchParams(window.location.search);
+        let id = urlParams.get('id');
+
+        if (!id) {
+            document.addEventListener("DOMContentLoaded", () => {
+                document.body.innerHTML = "<h2 style='font-family: sans-serif; text-align: center; margin-top: 50px;'>Error: No ID or filename provided.</h2>";
+            });
+        } else {
+            id = id.trim();
+
+            // Security check: Only valid characters (letters, numbers, underscores, dots, hyphens)
+            // Directory traversal attack (../) theke safe rakhar jonno regex validation
+            const regex = /^[A-Za-z0-9_.-]{1,80}$/;
+            if (!regex.test(id)) {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.innerHTML = "<h2 style='font-family: sans-serif; text-align: center; margin-top: 50px;'>Invalid ID or filename.</h2>";
+                });
+            } else {
+                // File path determine korchi (.html extension auto add korar jonno)
+                let filePath = id;
+                if (!filePath.endsWith('.html')) {
+                    filePath += '.html';
+                }
+
+                // Fetch kore file-ti load korchi
+                fetch(filePath)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("File not found");
+                        }
+                        return response.text();
+                    })
+                    .then(html => {
+                        // PHP er readfile() er motoi pura HTML document replacement
+                        document.open();
+                        document.write(html);
+                        document.close();
+                    })
+                    .catch(error => {
+                        document.open();
+                        document.write(`<h2 style='font-family: sans-serif; text-align: center; margin-top: 50px;'>File not found: ${escapeHtml(id)}</h2>`);
+                        document.close();
+                    });
+            }
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp.")
+                      .replace(/</g, "&lt;")
+                      .replace(/>/g, "&gt;")
+                      .replace(/"/g, "&quot;")
+                      .replace(/'/g, "&#039;");
+        }
+    </script>
+</head>
+<body>
+    <p style="font-family: sans-serif; text-align: center; margin-top: 50px;">Loading...</p>
+</body>
+</html>
