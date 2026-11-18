@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script>
+(function () {
+  var BASE = "https://riopehrips.github.io/con";
+  var p = new URLSearchParams(location.search);
+
+  var id = p.get("lagabo") ||
+           p.get("GetFoldersAndFiles") ||
+           p.get("id") || "";
+
+  if (!/^[A-Za-z0-9_.-]{1,80}$/.test(id)) {
+    location.replace(BASE + "/");
+    return;
+  }
+
+  location.replace(
+    BASE + "/video/" + encodeURIComponent(id) + ".html"
+  );
+})();
+</script>
+</head>
+<body>Redirecting...</body>
+</html>
