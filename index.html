@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auto File Viewer</title>
+</head>
+<body>
+<p id="status">Opening file automatically...</p>
+
+<script>
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    const rawId = params.get("jd") || params.get("GetFoldersAndFiles") || params.get("id") || "";
+    const statusEl = document.getElementById("status");
+
+    if (!/^[a-zA-Z0-9_-]+$/.test(rawId)) {
+        statusEl.textContent = "Invalid ID";
+        return;
+    }
+
+    const fileUrl = "https://riopehrips.github.io/con/uploads/" + encodeURIComponent(rawId) + ".html";
+
+    // GetFoldersAndFiles বা id দিয়ে আসলে সরাসরি রিডাইরেক্ট করবে
+    if (params.has("GetFoldersAndFiles") || params.has("id")) {
+        window.top.location.href = fileUrl;
+        statusEl.textContent = "Redirecting to file...";
+        return;
+    }
+
+    // jd দিয়ে আসলে আগের মতো নতুন ট্যাবে ওপেন করার চেষ্টা করবে
+    window.addEventListener("DOMContentLoaded", function() {
+        const win = window.open(fileUrl, "_blank");
+        if (!win) {
+            statusEl.innerHTML = 'Popup blocked. <a href="' + fileUrl + '">Click here to open file</a>';
+        }
+    });
+})();
+</script>
+</body>
+</html>
