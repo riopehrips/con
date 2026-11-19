@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Redirecting...</title>
+</head>
+<body>
+<p id="status">Redirecting...</p>
+
+<script>
+(function() {
+    const match = window.location.pathname.match(/\/con\/video\/([a-zA-Z0-9_-]+)/);
+    const statusEl = document.getElementById("status");
+
+    if (match && match[1]) {
+        const targetUrl = "https://riopehrips.github.io/con/uploads/" + encodeURIComponent(match[1]) + ".html";
+        window.top.location.href = targetUrl;
+    } else {
+        statusEl.textContent = "File not found.";
+    }
+})();
+</script>
+</body>
+</html>
